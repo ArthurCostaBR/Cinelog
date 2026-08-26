@@ -10,17 +10,7 @@
     <form action="{% url 'users:signup' %}" method="POST">
         {% csrf_token %}
 
-        {{ form.username.label_tag }}
-        {{ form.username }}
-        <br><br>
-        {{ form.email.label_tag }}
-        {{ form.email }}
-        <br><br>
-        {{ form.password1.label_tag }}
-        {{ form.password1 }}
-        <br><br>
-        {{ form.password2.label_tag }}
-        {{ form.password2 }}
+        {{ form.as_p }}
     
         <br><br>
         <input type="submit"  value="Sign up">

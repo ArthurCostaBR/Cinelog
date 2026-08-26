@@ -10,11 +10,7 @@
     <form action="{% url 'users:login' %}" method="POST">
         {% csrf_token %}
         
-        {{ form.email.label_tag }}
-        {{ form.email }}
-        <br><br>
-        {{ form.password.label_tag }}
-        {{ form.password }}
+        {{ form.as_p }}
 
         <br><br>
         <input type="submit" value="Login">
