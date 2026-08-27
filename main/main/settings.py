@@ -123,6 +123,17 @@ STATIC_URL = 'static/'
 
 MAILERS = {
     'default': {
-        'BACKEND': 'django.core.mail.backends.console.EmailBackend',
+        'BACKEND': 'django.core.mail.backends.smtp.EmailBackend',
+        'OPTIONS': {
+            'host': os.getenv("EMAIL_HOST"),
+            'port': int(os.getenv("EMAIL_PORT", "587")),
+            'use_tls': True,
+            'username': os.getenv("EMAIL_HOST_USER"),
+            'password': os.getenv("EMAIL_HOST_PASSWORD")
+        }
     },
 }
+# Close the session when user closes the browser
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+

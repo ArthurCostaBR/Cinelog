@@ -19,10 +19,10 @@ def signup_view(request):
                 form.save()
                 return HttpResponse(f"Welcome {form.cleaned_data.get('username')}!")
         
-        return render(request, 'signup/signup.html', context={"form":form})
+        return render(request, 'users/signup/signup.html', context={"form":form})
 
     else:
-        return render(request, 'signup/signup.html', context={"form":SignupForm()})
+        return render(request, 'users/signup/signup.html', context={"form":SignupForm()})
         
 
 def login_view(request):
@@ -42,6 +42,6 @@ def login_view(request):
             else:
                 form.add_error(None, "Invalid credentials.")
 
-        return render(request, "login/login.html", context={"form": form})
+        return render(request, "users/login/login.html", context={"form": form})
 
-    return render(request, 'login/login.html', context={"form": LoginForm()})
+    return render(request, 'users/login/login.html', context={"form": LoginForm()})
