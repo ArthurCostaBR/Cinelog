@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Profile</h1>
-    <form action="{% url 'pages:profile' %}" method="POST">
+    <form action="{% url 'users:profile' %}" method="POST">
         {% csrf_token %}
         <button type="submit" name="action" value="logout">Logout</button>
     </form>

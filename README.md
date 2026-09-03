@@ -5,7 +5,7 @@
 </h1>
 
 <h3>
-    Cinelog is an open-source app for exploring movies and TV shows, and building your perfect watchlist.
+    Cinelog is an open-source app for discovering movies and TV shows and building your perfect watchlist.
 </h3>
 
 ![release](https://img.shields.io/badge/version-v0.1-blue)
@@ -31,7 +31,11 @@
 - Docker
 
 ## Features
-- User authentication
+- [x] User authentication
+- [ ] Movie and TV show catalog
+- [ ] Catalog search
+- [ ] Custom public and private watchlists
+- [ ] Social profiles
 
 ## Requirements
 - Docker
@@ -44,14 +48,14 @@
    git clone <repository-url>
    cd cinelog
    ```
-2. Create a `.env` file in the project root, and fill with the same variables on the `.env.example` file.
+2. Create a `.env` file in the project root and add the variables listed in `.env.example`.
 
 3. Build and start the containers:
     ```bash
     docker compose up --build -d
     ```
 
-4. Run Django database migration:
+4. Run Django database migrations:
     ```bash
     docker compose exec web python manage.py migrate
     ```
@@ -75,9 +79,11 @@
 | `MOVIE_API_TOKEN` | TMDB API token |
 
 ## Modules
-- main: Django project configuration 
-- [users:](main/users/README.md) Authentication and user-related functionality 
-- [pages:](main/pages/README.md) Application pages 
+- `main`: Django project configuration
+- `accounts`: Authentication and account management
+- `pages`: Generic application pages
+- `catalog`: TMDB movie and TV show catalog and search
+- `users`: User profiles and social features
 
 ## How to contribute
 1. Fork the repository.
@@ -93,4 +99,4 @@ Cinelog is licensed under the [MIT License](LICENSE).
 
     - Email: arthurdacosta.br@gmail.com
     - LinkedIn: linkedin.com/in/arthurcostabr/
-    - Made by: Arthur Costa.
+    - Made by Arthur Costa
