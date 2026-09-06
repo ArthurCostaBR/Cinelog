@@ -75,33 +75,55 @@ class TmdbApi():
         }
 
 
-    def popular_movies(self) -> dict:
-        """Return a dict with the most popular movies on TMDB."""
+    def trending_movies(self, time_window="day") -> dict:
+        """Return a dict list with the most popular movies on TMDB."""
 
         params = {
             "language": self._get_language(),
-            "page": 1
+            "page": 1,
         }
 
-        url = f"{self.base_url}/movie/popular"
+        url = f"{self.base_url}/trending/movie/{time_window}"
 
         response = requests.get(url, headers=self.headers, params=params)
         response.raise_for_status()
+        response = response.json()
 
-        return response.json()
+        movie_list = []
+
+        for result in response["results"]:
+            if len(movie_list) < 9:
+                movie_list.append({
+                    "title": result.get("title"),
+                    "poster": result.get("poster_path"),
+                    "release_date": result.get("release_date"),
+                })
+
+        return movie_list
 
 
-    def popular_tv_shows(self) -> dict:
-        """Return a dict with the most popular TV shows on TMDB."""
+    def trending_tv_shows(self, time_window="day") -> dict:
+        """Return a dict list with the most popular TV shows on TMDB."""
 
         params = {
             "language": self._get_language(),
-            "page": 1
+            "page": 1,
         }
 
-        url = f"{self.base_url}/tv/popular"
+        url = f"{self.base_url}/trending/tv/{time_window}"
 
         response = requests.get(url, headers=self.headers, params=params)
         response.raise_for_status()
+        response = response.json()
 
-        return response.json()
+        shows_list = []
+
+        for result in response["results"]:
+            if len(shows_list) < 9:
+                shows_list.append({
+                    "title": result.get("name"),
+                    "poster": result.get("poster_path"),
+                    "release_date": result.get("first_air_date")
+                })
+
+        return shows_list

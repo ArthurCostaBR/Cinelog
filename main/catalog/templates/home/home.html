@@ -7,6 +7,10 @@
 </head>
 <body>
     <h1>Welcome to Cinelog</h1>
+
+    <a href="{% url 'users:profile' %}">Profile</a>
+
+    <br><br>
     
     <form method="GET" action="{% url 'catalog:search' %}">
         <input type="search" name="query" placeholder="Search" required>
@@ -15,6 +19,41 @@
 
     <br>
     
-    <a href="{% url 'users:profile' %}">Profile</a>
+    <h3>Trending movies</h3>
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+        {% for movie in movies %}
+            <div style="width: 150px; text-align: center;">
+                <img src="https://image.tmdb.org/t/p/w500{{ movie.poster }}" alt="{{ movie.title }}" 
+                    style="width: 150px; height: 225px;">
+                {% if movie.title %}
+                    <h4 style="height: 40px; margin: 8px 0 4px;">{{ movie.title }}</h4>
+                {% endif %}
+
+                {% if movie.release_date %}
+                    ({{ movie.release_date }})
+                {% endif %}
+            </div>        
+        {% endfor %}
+    </div>
+
+    <br><br>
+
+    <h3>Trending TV shows</h3>
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+        {% for show in shows %}
+            <div style="width: 150px; text-align: center;">
+                <img src="https://image.tmdb.org/t/p/w500{{ show.poster }}" alt="{{ show.title }}"
+                    style="width: 150px; height: 225px;">
+                {% if show.title %}
+                    <h4 style="height: 40px; margin: 8px 0 4px;">{{ show.title }}</h4>
+                {% endif %}
+
+                {% if show.release_date %}
+                    ({{ show.release_date }})
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
 </body>
 </html>

@@ -6,7 +6,11 @@ tmdb = TmdbApi()
 
 @login_required(login_url='/accounts/login/')
 def home_view(request):
-    return render(request, 'home/home.html')
+    context = {
+        "movies": tmdb.trending_movies(),
+        "shows": tmdb.trending_tv_shows(),
+    }
+    return render(request, 'home/home.html', context=context)
 
 
 @login_required(login_url='/accounts/login/')
