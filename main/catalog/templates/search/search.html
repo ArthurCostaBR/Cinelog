@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search</title>
+</head>
+
+<body>
+    <h1>Cinelog search</h1>
+
+    <form method="GET" action="{% url 'catalog:search' %}">
+        <input type="search" name="query" placeholder="Search" required>
+        <button type="submit">Search</button>
+    </form>
+
+    <br><br>
+
+    {% for result in results %}
+        <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+            <img src="https://image.tmdb.org/t/p/w500{{ result.poster}}" alt="{{ result.name }}" width="130" height=170">
+
+            <div>
+                <div>
+                   <h3 style="display: inline;">{{ result.name }}</h3>
+
+                    {% if result.release_date %}
+                        <span>({{ result.release_date }})</span>
+                    {% endif %}
+                </div>    
+            
+                {% if result.known_for %}
+                    {% for movie in result.known_for %}
+                        <p>{{ movie.title }}</p>
+                    {% endfor %}
+                {% endif %}
+
+                {% if result.score %}
+                    <p>User score: {{ result.score|floatformat:1 }}</p>
+                {% endif %}
+
+                {% if result.overview %}
+                    <p>{{ result.overview }}</p>
+                {% endif %}
+            </div>
+            
+        </div> <br>
+    {% endfor %}
+
+    <div>
+        {% if page > 1 %}
+            <a href="?query={{ query }}&action=search&page={{ page|add:'-1' }}">Back</a>
+        {% endif %}
+
+        <span>
+            {% if page %}
+                Page {{ page }} of {{ total_pages }}
+            {% endif %}
+        </span>
+
+        {% if page < total_pages %}
+            <a href="?query={{ query }}&action=search&page={{ page|add:'+1' }}">Next</a>
+        {% endif%}
+    </div>
+    
+</body>
+</html>

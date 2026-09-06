@@ -6,7 +6,15 @@
     <title>Home</title>
 </head>
 <body>
-    <h1>Cinelog</h1>
+    <h1>Welcome to Cinelog</h1>
+    
+    <form method="GET" action="{% url 'catalog:search' %}">
+        <input type="search" name="query" placeholder="Search" required>
+        <button type="submit">Search</button>
+    </form>
+
+    <br>
+    
     <a href="{% url 'users:profile' %}">Profile</a>
 </body>
 </html>

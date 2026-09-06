@@ -1,6 +1,37 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from .tmdb_client import TmdbApi
+
+tmdb = TmdbApi()
 
 @login_required(login_url='/accounts/login/')
 def home_view(request):
     return render(request, 'home/home.html')
+
+
+@login_required(login_url='/accounts/login/')
+def search_view(request):
+    query = request.GET.get("query", "")
+
+    try:
+        page = max(1, int(request.GET.get("page", 1)))
+    except (TypeError, ValueError):
+        page = 1
+
+    data = {
+        "results": [],
+        "page": None,
+        "total_pages": None,
+    }
+
+    if query:
+        data = tmdb.search_multi(query=query, page=page)
+
+    context = {
+        "results": data["results"],
+        "page": data["page"],
+        "total_pages": data["total_pages"],
+        "query": query
+    }
+            
+    return render(request, 'search/search.html', context=context)
