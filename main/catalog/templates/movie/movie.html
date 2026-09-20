@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ details.title }}</title>
+</head>
+<body>
+
+    <div style="display: flex; gap: 20px;">
+
+        <div>
+            {% if details.poster_path %}
+                <img
+                    src="https://image.tmdb.org/t/p/w500{{ details.poster_path }}"
+                    alt="{{ details.title }}" style="width: 300px;">
+            {% endif %}
+        </div>
+
+        <div>
+            <h2>{{ details.title }}</h2>
+
+            {% if details.release_date %}
+                <p>Release date: {{ details.release_date }}</p>
+            {% endif %}
+
+            {% if details.genres %}
+                <p>
+                    Genres:
+                    {% for genre in details.genres %}
+                        {{ genre.name }}
+                    {% endfor %}
+                </p>
+            {% endif %}
+
+            {% if details.runtime %}
+                <p>Runtime: {{ details.runtime }} min</p>
+            {% endif %}
+
+            {% if details.vote_average %}
+                <p>User score: {{ details.vote_average|floatformat:1 }}</p>
+            {% endif %}
+
+            {% if main_jobs %}
+                {% for person in main_jobs %}
+                    <p>
+                        {{ person.job }}:
+                        <a href="{% url 'catalog:details' media_type='person' tmdb_id=person.id %}">
+                            {{ person.name }}
+                        </a>
+                    </p>
+                {% endfor %}
+            {% endif %}
+
+            {% if details.overview %}
+                <div style="max-width: 800px;">
+                    <h3>Overview</h3>
+                    <p>{{ details.overview }}</p>
+                </div>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    {% if top_billed_cast %}
+        <h3>Cast</h3>
+
+        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+            {% for person in top_billed_cast %}
+
+                <div style="width: 150px; text-align: center;">
+
+                    {% if person.profile_path %}
+                        <img
+                            src="https://image.tmdb.org/t/p/w500{{ person.profile_path }}"
+                            alt="{{ person.name }}"
+                            style="width: 150px; height: 225px; object-fit: cover;">
+                    {% endif %}
+
+                    <a href="{% url 'catalog:details' media_type='person' tmdb_id=person.id %}">
+                        <h4 style="height: 40px; margin: 8px 0 4px;">
+                            {{ person.name }}
+                        </h4>
+                    </a>
+
+                    {% if person.character %}
+                        <span>({{ person.character }})</span>
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+        </div>
+    {% endif %}
+
+</body>
+</html>

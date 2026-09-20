@@ -18,12 +18,14 @@
 
     {% for result in results %}
         <div style="display: flex; gap: 15px; margin-bottom: 20px;">
-            <img src="https://image.tmdb.org/t/p/w500{{ result.poster}}" alt="{{ result.name }}" 
+            <img src="https://image.tmdb.org/t/p/w500{{ result.poster }}" alt="{{ result.name }}" 
                 style="width: 130px; height: 170px;">
 
             <div>
                 <div>
-                   <h3 style="display: inline;">{{ result.name }}</h3>
+                    <a href="{% url 'catalog:details' media_type=result.media_type tmdb_id=result.id %}">
+                        <h3 style="display: inline;">{{ result.name }}</h3>
+                    </a>
 
                     {% if result.release_date %}
                         <span>({{ result.release_date }})</span>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ details.name }}</title>
+</head>
+<body>
+
+    <div style="display: flex; gap: 20px;">
+
+        <div>
+            {% if details.profile_path %}
+                <img
+                    src="https://image.tmdb.org/t/p/w500{{ details.profile_path }}"
+                    alt="{{ details.name }}" style="width: 300px;">
+            {% endif %}
+        </div>
+
+        <div>
+            <h2>{{ details.name }}</h2>
+
+            {% if details.birthday %}
+                <p>Birthday: {{ details.birthday }}</p>
+            {% endif %}
+
+            {% if details.deathday %}
+                <p>Deathday: {{ details.deathday }}</p>
+            {% endif %}
+
+            {% if details.place_of_birth %}
+                <p>Place of birth: {{ details.place_of_birth }}</p>
+            {% endif %}
+
+            {% if details.biography %}
+                <p>User score: {{ details.biography }}</p>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    {% if person_credits %}
+    {% for department, credits in person_credits.items %}
+        {% if credits %}
+                <h2>{{ department }}</h2>
+
+                <div style="margin-bottom: 30px;">
+                    {% for credit in credits %}
+                        <div style="display: flex; gap: 15px; margin-bottom: 10px;">
+
+                            <span style="width: 32px;">
+                                {{ credit.release_date|slice:":4" }}
+                            </span>
+
+                            <div>
+                                <a href="{% url 'catalog:details' media_type=credit.media_type tmdb_id=credit.id %}">
+                                    {{ credit.title }}
+                                </a>
+
+                                {% if credit.job %}
+                                    <span style="margin-left: 8px;">
+                                        | {{ credit.job }}
+                                    </span>
+                                {% endif %}
+                            </div>
+
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ details.title }}</title>
+</head>
+<body>
+
+    <div style="display: flex; gap: 20px;">
+
+        <div>
+            {% if details.poster_path %}
+                <img
+                    src="https://image.tmdb.org/t/p/w500{{ details.poster_path }}"
+                    alt="{{ details.title }}" style="width: 300px;">
+            {% endif %}
+        </div>
+
+        <div>
+            <h2>{{ details.name }}</h2>
+
+            {% if details.first_air_date %}
+                <p>Release date: {{ details.first_air_date }}</p>
+            {% endif %}
+
+            {% if details.last_air_date %}
+                <p>Last air date: {{ details.last_air_date }}</p>
+            {% endif %}
+
+            {% if details.genres %}
+                <p>
+                    Genres:
+                    {% for genre in details.genres %}
+                        {{ genre.name }}
+                    {% endfor %}
+                </p>
+            {% endif %}
+
+            {% if details.vote_average %}
+                <p>User score: {{ details.vote_average|floatformat:1 }}</p>
+            {% endif %}
+
+            {% if details.created_by %}
+                {% for person in details.created_by %}
+                    <p>
+                        Creator: 
+                        <a href="{% url 'catalog:details' media_type='person' tmdb_id=person.id %}">
+                            {{ person.name }}
+                        </a>
+                    </p>
+                {% endfor %}
+            {% endif %}
+
+            {% if details.overview %}
+                <div style="max-width: 800px;">
+                    <h3>Overview</h3>
+                    <p>{{ details.overview }}</p>
+                </div>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    {% if details.seasons %}
+        <h3>Seasons</h3>
+
+        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+            {% for season in details.seasons %}
+
+                <div style="width: 150px; text-align: center;">
+
+                    {% if season.poster_path %}
+                        <img
+                            src="https://image.tmdb.org/t/p/w500{{ season.poster_path }}"
+                            alt="{{ season.name }}"
+                            style="width: 150px; height: 225px; object-fit: cover;">
+                    {% endif %}
+
+                    
+                    <h4 style="height: 40px; margin: 8px 0 4px;">
+                        {{ season.name }}
+
+                        {% if season.air_date %}
+                            <span>({{ season.air_date }})</span>
+                        {% endif %}
+                    </h4>
+                
+                    {% if season.episode_count %}
+                        Episode count: {{ season.episode_count }}
+                    {% endif %}
+                </div>
+
+            {% endfor %}
+        </div>
+    {% endif %}
+
+
+    {% if top_billed_cast %}
+        <h3>Cast</h3>
+
+        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+            {% for person in top_billed_cast %}
+
+                <div style="width: 150px; text-align: center;">
+
+                    {% if person.profile_path %}
+                        <img
+                            src="https://image.tmdb.org/t/p/w500{{ person.profile_path }}"
+                            alt="{{ person.name }}"
+                            style="width: 150px; height: 225px; object-fit: cover;">
+                    {% endif %}
+
+                    <a href="{% url 'catalog:details' media_type='person' tmdb_id=person.id %}">
+                        <h4 style="height: 40px; margin: 8px 0 4px;">
+                            {{ person.name }}
+                        </h4>
+                    </a>
+
+                    {% if person.character %}
+                        <span>({{ person.character }})</span>
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+        </div>
+    {% endif %}
+
+</body>
+</html>

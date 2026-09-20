@@ -15,7 +15,7 @@ def home_view(request):
 
 @login_required(login_url='/accounts/login/')
 def search_view(request):
-    query = request.GET.get("query", "")
+    query = request.GET.get("query", "").strip()
 
     try:
         page = max(1, int(request.GET.get("page", 1)))
@@ -39,3 +39,17 @@ def search_view(request):
     }
             
     return render(request, 'search/search.html', context=context)
+
+
+@login_required(login_url='/accounts/login/')
+def details_view(request, media_type, tmdb_id):
+    context = tmdb.get_details(
+        media_type=media_type,
+        tmdb_id=tmdb_id,
+    )
+
+    if media_type in ("movie", "tv", "person"):
+
+        template = f"{media_type}/{media_type}.html"
+
+        return render(request, template, context=context)
