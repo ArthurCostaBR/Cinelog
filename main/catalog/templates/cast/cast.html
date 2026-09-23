@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cast & Crew</title>
+</head>
+<body>
+    {% if cast %}
+        <div style="margin-bottom: 30px;">
+            {% for person in cast %}
+                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+
+                    <img src="https://image.tmdb.org/t/p/w500{{ person.profile_path }}"
+                        alt="{{ person.name }}" style="width: 120px; height: 140px; object-fit: cover;"
+                    >
+
+                    <div>
+                        <a href="{% url 'catalog:details' media_type='person' tmdb_id=person.id %}">
+                            <h4>{{ person.name }}</h4>
+                        </a>
+                        
+                        <p>
+                            {{ person.character }}
+                        </p>
+                    </div>
+                </div>
+                <br>
+            {% endfor %}
+        </div>
+    {% endif %}
+</body>
+</html>

@@ -22,6 +22,7 @@ def search_view(request):
     except (TypeError, ValueError):
         page = 1
 
+
     data = {
         "results": [],
         "page": None,
@@ -48,8 +49,27 @@ def details_view(request, media_type, tmdb_id):
         tmdb_id=tmdb_id,
     )
 
+    context["media_type"] = media_type
+
     if media_type in ("movie", "tv", "person"):
 
         template = f"{media_type}/{media_type}.html"
 
         return render(request, template, context=context)
+    
+
+@login_required(login_url='/accounts/login/')
+def cast_view(request, media_type, tmdb_id):
+    cast = tmdb.get_cast(
+        media_type=media_type,
+        tmdb_id=tmdb_id,
+    )
+
+    context = {
+        "cast": cast,
+        "media_type": media_type,
+        "tmdb_id": tmdb_id,
+    }
+
+    if media_type in ("movie", "tv"):
+        return render(request, 'cast/cast.html', context=context)

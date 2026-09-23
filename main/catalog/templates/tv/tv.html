@@ -96,9 +96,15 @@
         </div>
     {% endif %}
 
+    <br>
 
     {% if top_billed_cast %}
-        <h3>Cast</h3>
+        <a href="{% url 'catalog:cast' media_type=media_type tmdb_id=details.id %}">
+            <h3 style="height: 40px; margin: 8px 0 4px;">
+                Cast
+            </h3>
+        </a>
+        
 
         <div style="display: flex; gap: 20px; flex-wrap: wrap;">
             {% for person in top_billed_cast %}

@@ -4,6 +4,7 @@ from django.utils.translation import get_language
 
 load_dotenv()
 
+#region - Class config
 class TmdbApi():
     """Client for retrieving and formatting data from the TMDB API."""
 
@@ -30,58 +31,9 @@ class TmdbApi():
             language = f"{parts[0].lower()}-{parts[1].upper()}"
 
         return language
+#endregion
 
-
-    def search_multi(self, query: str, page: int) -> dict:
-        """Search TMDB for movies, TV shows, and people and return relevant results."""
-
-        params = {
-            "language": self._get_language(),
-            "page": page,
-            "query": query
-        }
-
-        url = f"{self.base_url}/search/multi"
-
-        response = requests.get(url=url, headers=self.headers, params=params)
-        response.raise_for_status()
-        response = response.json()
-
-        results = []
-
-        for result in response["results"]:
-            if not (result.get("poster_path") or result.get("profile_path")):
-                continue
-
-            if result.get("popularity", 0) < 0.4:
-                continue
-
-            if result.get("vote_count", 0) <= 1:
-                continue
-
-            known_for = []
-                            
-            for movie in result.get("known_for", []):
-                known_for.append({"title": movie.get("title") or movie.get("name")})
-
-            results.append({
-                "id": result.get("id"),
-                "name": result.get("name") or result.get("title"),
-                "media_type": result.get("media_type"),
-                "release_date": result.get("release_date") or result.get("first_air_date"),
-                "score": result.get("vote_average"),
-                "poster": result.get("poster_path") or result.get("profile_path"),
-                "overview": result.get("overview"),
-                "known_for": known_for
-            })
-
-        return {
-            "results": results,
-            "page": response.get("page"),
-            "total_pages": response.get("total_pages")
-        }
-
-
+#region - Home view
     def trending_movies(self, time_window: str="day") -> list[dict]:
         """Return up to nine trending movies for the given time window."""
 
@@ -109,35 +61,84 @@ class TmdbApi():
 
         return movie_list
 
-
     def trending_tv_shows(self, time_window: str="day") -> list[dict]:
-        """Return up to nine trending TV shows for the given time window."""
+            """Return up to nine trending TV shows for the given time window."""
+    
+            params = {
+                "language": self._get_language(),
+                "page": 1,
+            }
+    
+            url = f"{self.base_url}/trending/tv/{time_window}"
+    
+            response = requests.get(url=url, headers=self.headers, params=params)
+            response.raise_for_status()
+            response = response.json()
+    
+            shows_list = []
+    
+            for result in response["results"]:
+                if len(shows_list) < 9:
+                    shows_list.append({
+                        "id": result.get("id"),
+                        "title": result.get("name"),
+                        "poster": result.get("poster_path"),
+                        "release_date": result.get("first_air_date"),
+                    })
+    
+            return shows_list
+    
+#endregion
+
+#region - Search view
+    def search_multi(self, query: str, page: int) -> dict:
+        """Search TMDB for movies, TV shows, and people and return relevant results."""
 
         params = {
             "language": self._get_language(),
-            "page": 1,
+            "page": page,
+            "query": query
         }
 
-        url = f"{self.base_url}/trending/tv/{time_window}"
+        url = f"{self.base_url}/search/multi"
 
         response = requests.get(url=url, headers=self.headers, params=params)
         response.raise_for_status()
         response = response.json()
 
-        shows_list = []
+        results = []
 
         for result in response["results"]:
-            if len(shows_list) < 9:
-                shows_list.append({
-                    "id": result.get("id"),
-                    "title": result.get("name"),
-                    "poster": result.get("poster_path"),
-                    "release_date": result.get("first_air_date"),
-                })
+            if not (result.get("poster_path") or result.get("profile_path")):
+                continue
 
-        return shows_list
+            if result.get("popularity", 0) < 0.5:
+                continue
 
+            known_for = []
+                            
+            for movie in result.get("known_for", []):
+                known_for.append({"title": movie.get("title") or movie.get("name")})
 
+            results.append({
+                "id": result.get("id"),
+                "name": result.get("name") or result.get("title"),
+                "media_type": result.get("media_type"),
+                "release_date": result.get("release_date") or result.get("first_air_date"),
+                "score": result.get("vote_average"),
+                "poster": result.get("poster_path") or result.get("profile_path"),
+                "overview": result.get("overview"),
+                "known_for": known_for
+            })
+
+        return {
+            "results": results,
+            "page": response.get("page"),
+            "total_pages": response.get("total_pages")
+        }
+#endregion
+
+#region - Details view
     def get_details(self, media_type: str, tmdb_id: int) -> dict:
         """Return all data required to render a movie, TV show, or person detail page."""
 
@@ -156,6 +157,7 @@ class TmdbApi():
             person_credits = self._person_credits(credits=credits)
 
         return {
+            "media_type": media_type,
             "details": details,
             "credits": credits,
             "top_billed_cast": top_billed_cast,
@@ -300,7 +302,8 @@ class TmdbApi():
             "Novel", 
             "Writer", 
             "Story", 
-            "Teleplay"
+            "Teleplay",
+            "Director of Photography"
             )
         
         response = []
@@ -316,3 +319,43 @@ class TmdbApi():
                 })
 
         return response
+#endregion
+
+#region - Cast view
+    def get_cast(self, media_type: str, tmdb_id: int) -> dict:
+        """Return all the cast members creedited in a movie or TV show."""
+
+        params = {
+            "language": self._get_language(),
+        }
+
+        url = f"{self.base_url}/{media_type}/{tmdb_id}"
+
+        if media_type == "tv":
+            url = f"{url}/aggregate_credits" 
+        elif media_type == "movie":
+            url = f"{url}/credits"
+
+        credits = requests.get(url=url, headers=self.headers, params=params)
+        credits.raise_for_status()
+        credits = credits.json()
+
+        cast = []
+
+        for person in credits.get("cast", []):
+
+            if person.get("roles"):
+                roles = person.get("roles", [])
+
+            if not person.get("profile_path"):
+                continue
+                
+            cast.append({
+                "id": person.get("id"),
+                "name": person.get("name"),
+                "profile_path": person.get("profile_path"),
+                "character": person.get("character") or roles[0].get("character")
+            })
+
+        return cast
+#endregion
