@@ -35,22 +35,6 @@ class WatchlistItem(models.Model):
 
     title = models.CharField(max_length=255)
 
-    general_score = models.PositiveSmallIntegerField(
-        null=True, blank=True
-    )
-
-    direction_score = models.PositiveSmallIntegerField(
-        null=True, blank=True
-    )
-
-    novel_score = models.PositiveSmallIntegerField(
-        null=True, blank=True
-    )
-
-    screenplay_score = models.PositiveSmallIntegerField(
-        null=True, blank=True
-    )
-
     description = models.TextField(blank=True, default="")
 
     class Meta:

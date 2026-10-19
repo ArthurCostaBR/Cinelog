@@ -37,22 +37,6 @@
                         <p>{{ item.description }}</p>
                     {% endif %}
 
-                    {% if item.general_score != None %}
-                        <p>General score: {{ item.general_score }}</p>
-                    {% endif %}
-
-                    {% if item.direction_score != None %}
-                        <p>Direction score: {{ item.direction_score }}</p>
-                    {% endif %}
-
-                    {% if item.novel_score != None %}
-                        <p>Novel score: {{ item.novel_score }}</p>
-                    {% endif %}
-
-                    {% if item.screenplay_score != None %}
-                        <p>Screenplay score: {{ item.screenplay_score }}</p>
-                    {% endif %}
-
                     <form
                         method="POST"
                         action="{% url 'users:watchlist_delete_item' watchlist_id=watchlist.id item_id=item.id %}"
