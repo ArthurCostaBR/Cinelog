@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ watchlist.title }} - Cinelog</title>
+</head>
+<body>
+
+    <h1>{{ watchlist.title }}</h1>
+
+    <a href="{% url 'users:watchlist' %}">My Watchlists</a>
+    |
+    <a href="{% url 'catalog:home' %}">Home</a>
+
+    <br><br>
+
+    {% for message in messages %}<p>{{ message }}</p>{% endfor %}
+
+    <h3>Items ({{ items.count }})</h3>
+
+    {% if items %}
+
+        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+
+            {% for item in items %}
+
+                <div style="width: 220px; border: 1px solid #ccc; padding: 15px;">
+
+                    <h4>{{ item.title }}</h4>
+
+                    <p>{{ item.get_media_type_display }} · TMDB ID: {{ item.tmdb_item_id }}</p>
+
+                    <a href="{% url 'catalog:details' media_type=item.media_type tmdb_id=item.tmdb_item_id %}">View details</a>
+
+                    {% if item.description %}
+                        <p>{{ item.description }}</p>
+                    {% endif %}
+
+                    {% if item.general_score != None %}
+                        <p>General score: {{ item.general_score }}</p>
+                    {% endif %}
+
+                    {% if item.direction_score != None %}
+                        <p>Direction score: {{ item.direction_score }}</p>
+                    {% endif %}
+
+                    {% if item.novel_score != None %}
+                        <p>Novel score: {{ item.novel_score }}</p>
+                    {% endif %}
+
+                    {% if item.screenplay_score != None %}
+                        <p>Screenplay score: {{ item.screenplay_score }}</p>
+                    {% endif %}
+
+                    <form
+                        method="POST"
+                        action="{% url 'users:watchlist_delete_item' watchlist_id=watchlist.id item_id=item.id %}"
+                    >
+                        {% csrf_token %}
+
+                        <button type="submit">Remove item</button>
+                    </form>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <p>This watchlist is empty.</p>
+
+        <p>Add a movie or TV show to get started.</p>
+
+    {% endif %}
+
+    <hr>
+    <h3>Manage watchlist</h3>
+    <form method="POST" action="{% url 'users:watchlist_update' watchlist_id=watchlist.id %}">
+        {% csrf_token %}
+        <label for="watchlist-title">Name</label>
+        <input id="watchlist-title" type="text" name="title" maxlength="100" value="{{ watchlist.title }}" required>
+        <button type="submit" name="action" value="rename">Rename</button>
+    </form>
+    <br>
+    <form method="POST" action="{% url 'users:watchlist_update' watchlist_id=watchlist.id %}">
+        {% csrf_token %}
+        <button type="submit" name="action" value="delete">Delete watchlist</button>
+    </form>
+
+</body>
+</html>

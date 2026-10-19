@@ -20,6 +20,24 @@
         <div>
             <h2>{{ details.title }}</h2>
 
+            <p><a href="{% url 'users:watchlist' %}">My Watchlists</a></p>
+
+            <h3>Add to a watchlist</h3>
+            {% if watchlists %}
+                {% for watchlist in watchlists %}
+                    <form method="post" action="{% url 'users:watchlist_add_item' watchlist_id=watchlist.id %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="tmdb_item_id" value="{{ details.id }}">
+                        <input type="hidden" name="media_type" value="movie">
+                        <input type="hidden" name="title" value="{{ details.title }}">
+                        <input type="hidden" name="description" value="{{ details.overview }}">
+                        <button type="submit">Add to {{ watchlist.title }}</button>
+                    </form>
+                {% endfor %}
+            {% else %}
+                <p><a href="{% url 'users:watchlist_create' %}">Create your first watchlist</a></p>
+            {% endif %}
+
             {% if details.release_date %}
                 <p>Release date: {{ details.release_date }}</p>
             {% endif %}

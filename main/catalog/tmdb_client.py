@@ -51,7 +51,7 @@ class TmdbApi():
         movie_list = []
 
         for result in response["results"]:
-            if len(movie_list) < 9:
+            if len(movie_list) < 7:
                 movie_list.append({
                     "id": result.get("id"),
                     "title": result.get("title"),
@@ -78,7 +78,7 @@ class TmdbApi():
             shows_list = []
     
             for result in response["results"]:
-                if len(shows_list) < 9:
+                if len(shows_list) < 7:
                     shows_list.append({
                         "id": result.get("id"),
                         "title": result.get("name"),

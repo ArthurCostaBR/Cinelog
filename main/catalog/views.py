@@ -51,6 +51,9 @@ def details_view(request, media_type, tmdb_id):
 
     context["media_type"] = media_type
 
+    if media_type in ("movie", "tv"):
+        context["watchlists"] = request.user.watchlists.all()
+
     if media_type in ("movie", "tv", "person"):
 
         template = f"{media_type}/{media_type}.html"

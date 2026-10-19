@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Watchlist - Cinelog</title>
+</head>
+<body>
+
+    <h1>Create Watchlist</h1>
+
+    <a href="{% url 'users:watchlist' %}">My Watchlists</a>
+    |
+    <a href="{% url 'catalog:home' %}">Home</a>
+
+    <br><br>
+
+    {% for message in messages %}<p>{{ message }}</p>{% endfor %}
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <label for="title">Watchlist title</label>
+
+        <br><br>
+
+        <input
+            type="text"
+            id="title"
+            name="title"
+            maxlength="100"
+            value="{{ title }}"
+            placeholder="e.g. Movies to watch"
+            required
+        >
+
+        <br><br>
+
+        <button type="submit">Create</button>
+
+        <a href="{% url 'users:watchlist' %}">
+            <button type="button">Cancel</button>
+        </a>
+
+    </form>
+
+</body>
+</html>
