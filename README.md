@@ -5,7 +5,7 @@
 </h1>
 
 <h3>
-    Cinelog is an open-source app for discovering movies and TV shows and building your perfect watchlist.
+    Cinelog is an open-source project for discovering movies and TV shows and building your perfect watchlist.
 </h3>
 
 ![release](https://img.shields.io/badge/version-v0.1-blue)
@@ -32,10 +32,9 @@
 
 ## Features
 - [x] User authentication
-- [ ] Movie and TV show catalog
-- [ ] Catalog search
-- [ ] Custom public and private watchlists
-- [ ] Social profiles
+- [x] Movie and TV show catalog
+- [x] Catalog search
+- [x] Custom watchlists
 
 ## Requirements
 - Docker
